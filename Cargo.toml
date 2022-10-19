@@ -1,0 +1,41 @@
+[package]
+name = "esp32-mesh"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = {version = "1", features = ["backtrace"]}
+log = "0.4"
+url = "2"
+esp-idf-sys = { version = "0.31", features = ["binstart"] }
+esp-idf-hal = "0.38"
+esp-idf-svc = "0.42.3"
+embedded-hal = "0.2"
+embedded-svc = "0.22"
+smol = "1.2"
+heapless = "0.7"
+
+[build-dependencies]
+embuild = { version = "0.30.3", features = ["espidf", "elf"] }
+anyhow = "1"
+
+[patch.crates-io]
+smol = { git = "https://github.com/esp-rs-compat/smol" }
+polling = { git = "https://github.com/esp-rs-compat/polling" }
+socket2 = { git = "https://github.com/esp-rs-compat/socket2" }
+getrandom = { version = "0.2", git = "https://github.com/esp-rs-compat/getrandom.git" }
+#getrandom1 = { version = "0.1", git = "https://github.com/esp-rs-compat/getrandom.git", package = "getrandom", branch = "0.1" }
+
+[profile.release]
+opt-level = "s"
+
+[profile.dev]
+debug = true # Symbols are nice and they don't increase the size on Flash
+opt-level = "z"
+
+[features]
+default = ["experimental"]
+
+experimental = ["esp-idf-svc/experimental", "esp-idf-hal/experimental", "embedded-svc/experimental"]
