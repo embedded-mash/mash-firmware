@@ -1,5 +1,5 @@
 [package]
-name = "esp32-mesh"
+name = "mesh-firmware"
 version = "0.1.0"
 edition = "2021"
 

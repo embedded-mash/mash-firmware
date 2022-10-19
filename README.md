@@ -1,4 +1,4 @@
-# ESP32-Mesh
+# mesh-firmware
 
 The purpose of this project is to build an self optimizing mesh of ESP32 MPUs with WiFi.
 
