@@ -82,14 +82,9 @@ fn wifi(
 ) -> Result<Box<EspWifi>> {
     let mut wifi = Box::new(EspWifi::new(netif_stack, sys_loop_stack, default_nvs)?);
 
-    info!("Wifi created, about to scan");
-    let mut ap_infos = wifi.scan()?;
-    ap_infos.sort_by(|a, b| a.signal_strength.cmp(&b.signal_strength));
-    let nearest_ssid = ap_infos.pop();
-
     // SAFETY: this operation is safe, because we started the EspWiFi module first
     // (https://docs.rs/esp-idf-sys/0.1.2/esp_idf_sys/fn.esp_random.html)
-    let ssid_id = unsafe { esp_random() % 999_999_999 };
+    let ssid_id = unsafe { esp_random() } % 999_999_999;
     let mut ssid: String<32> = String::new();
     ssid.push_str("esp-m-").unwrap();
 
@@ -98,8 +93,15 @@ fn wifi(
         ssid.push(('0' as u8 + char_shift) as char).unwrap();
     }
 
-    // As is safe for values between 0 and 13
+    // SAFETY: As is safe for values between 0 and 13
     let channel = Some(unsafe { esp_random() % 13 } as u8);
+
+    info!("Wifi created, about to scan");
+    let mut ap_infos = wifi.scan()?;
+    ap_infos.sort_by(|a, b| a.signal_strength.cmp(&b.signal_strength));
+    let nearest_ssid = ap_infos.pop();
+
+    let ssid_upper = nearest_ssid.map(|ap| ap.ssid).unwrap_or(SSID.into());
 
     // wifi.set_configuration(&Configuration::Client(ClientConfiguration {
     //     ssid: SSID.into(),
@@ -107,11 +109,6 @@ fn wifi(
     //     channel,
     //     ..Default::default()
     // }))?;
-    let ssid_upper = if let Some(ap) = nearest_ssid {
-        ap.ssid
-    } else {
-        SSID.into()
-    };
 
     wifi.set_configuration(&Configuration::Mixed(
         ClientConfiguration {

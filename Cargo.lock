@@ -712,23 +712,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "esp32-mesh"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "embedded-hal 0.2.7",
- "embedded-svc",
- "embuild 0.30.3",
- "esp-idf-hal",
- "esp-idf-svc",
- "esp-idf-sys",
- "heapless",
- "log",
- "smol",
- "url",
-]
-
-[[package]]
 name = "event-listener"
 version = "2.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1083,6 +1066,23 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5aa361d4faea93603064a027415f07bd8e1d5c88c9fbf68bf56a285428fd79ce"
 dependencies = [
  "autocfg",
+]
+
+[[package]]
+name = "mesh-firmware"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "embedded-hal 0.2.7",
+ "embedded-svc",
+ "embuild 0.30.3",
+ "esp-idf-hal",
+ "esp-idf-svc",
+ "esp-idf-sys",
+ "heapless",
+ "log",
+ "smol",
+ "url",
 ]
 
 [[package]]
