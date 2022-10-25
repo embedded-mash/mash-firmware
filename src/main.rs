@@ -51,8 +51,14 @@ fn main() -> Result<()> {
             match message {
                 EventLoopMessage::Command(Command::PropagateNow) => todo!(),
                 EventLoopMessage::Command(Command::ScanNetwork) => {
-                    let ap_infos = wifi.scan();
-                    println!("{:?}", ap_infos);
+                    if let core::result::Result::Ok(mut ap_infos) = wifi.scan() {
+                        ap_infos.sort_by(|a, b| a.signal_strength.cmp(&b.signal_strength));
+                        let nearest_ssid = ap_infos.pop();
+
+                        let ssid_upper = nearest_ssid.map(|ap| ap.ssid).unwrap_or(SSID.into());
+
+                        println!("{:?}", ssid_upper);
+                    }
                 }
                 EventLoopMessage::Network(NetworkPackage::DropYourConnection(_)) => todo!(),
                 EventLoopMessage::Network(NetworkPackage::ReceivesNewPropagation(_)) => todo!(),
